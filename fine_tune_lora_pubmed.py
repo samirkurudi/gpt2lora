@@ -28,7 +28,18 @@ lora_config = LoraConfig(
     bias="none",
     task_type=TaskType.CAUSAL_LM,
 )
-model = get_peft_model(model, lora_config)
+
+#
+#This tells the PEFT library:
+
+#Parameter	What it Means
+#r=4	Use rank-4 low-rank adapters (A and B matrices)
+#lora_alpha=16	Scale the LoRA update by alpha/r = 4.0
+#target_modules=["c_attn"]	Insert adapters into the c_attn layer of GPT2
+#lora_dropout=0.05	Dropout to regularize the adapters
+#bias="none"	Do not adapt the bias terms
+#task_type=CAUSAL_LM	This is a language generation model
+#model = get_peft_model(model, lora_config)
 
 # === 3. Load Dataset ===
 dataset = load_dataset("ccdv/pubmed-summarization", split="train[:2%]")  # small subset to test
@@ -74,4 +85,4 @@ model.save_pretrained("./lora-pubmed-distilgpt2")
 tokenizer.save_pretrained("./lora-pubmed-distilgpt2")
 
 print("✅ Training complete. Model saved to ./lora-pubmed-distilgpt2")
-
+#python3 fine_tune_lora_pubmed.py
